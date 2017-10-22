@@ -5,19 +5,113 @@ using UnityEngine;
 public class Pac : Character {
     public byte maxHealth = 5;
     byte currentHealth;
+    public int distantPower = 250;
+    public bool canMove;
 
     public UI_handler ui_handler;
+    public GameObject sword;
 
-    private bool spawned = false;
-    private float decay;
+
+    bool spawned = false;
+    float decay;
 
     public override void Start()
     {
         base.Start();
+        currentHealth = maxHealth;
+        canMove = true;
+    }
+
+    public override void Update()
+    {
+        base.Update();
+
+        if (Input.GetKeyDown(KeyCode.Space) && !spawned)
+        {
+            decay = 0.5f;
+            spawned = true;
+            Attack();
+        }
+
+        Reset();
+        if (Input.GetKey(KeyCode.Z) && !spawned)
+        {
+            decay = 0.5f;
+            spawned = true;
+            DecreaseHealth();
+        }
+        else if (Input.GetKey(KeyCode.X) && !spawned)
+        {
+            decay = 0.5f;
+            spawned = true;
+            IncreaseHealth();
+        }
+    }
+
+    void Attack()
+    {
+        canMove = false;
+
+        GameObject newSword = Instantiate(sword, transform.position, sword.transform.rotation);
+        var swordDir = anim.GetInteger(directionVariable);
+
+        if (swordDir == (int)direction.UP)
+        {
+            newSword.transform.Rotate(0, 0, 0);
+            newSword.GetComponent<Rigidbody2D>().AddForce(Vector2.up * distantPower);
+        }
+        else if (swordDir == (int)direction.RIGHT)
+        {
+            newSword.transform.Rotate(0, 0, 270);
+            newSword.GetComponent<Rigidbody2D>().AddForce(Vector2.right * distantPower);
+        }
+        else if (swordDir == (int)direction.DOWN)
+        {
+            newSword.transform.Rotate(0, 0, 180);
+            newSword.GetComponent<Rigidbody2D>().AddForce(Vector2.down * distantPower);
+        }
+        else if (swordDir == (int)direction.LEFT)
+        {
+            newSword.transform.Rotate(0, 0, 90);
+            newSword.GetComponent<Rigidbody2D>().AddForce(Vector2.left * distantPower);
+        }
+    }
+
+    public override void ManageHealth()
+    {
+        
+    }
+
+    void DecreaseHealth()
+    {
+        ui_handler.DecreaseHealth();
+        if (currentHealth > 0)
+        {
+            currentHealth--;
+        }
+        else
+        {
+            //game over
+        }
+    }
+
+    void IncreaseHealth()
+    {
+        ui_handler.IncreaseHealth();
+        if (currentHealth<maxHealth)
+        {
+            currentHealth++;
+        }
+        
     }
 
     public override int GetDirection()
     {
+        if (canMove == false)
+        {
+            return (int)direction.STOP;
+        }
+
         if (Input.GetKey(KeyCode.W))
         {
             return (int)direction.UP;
@@ -37,29 +131,6 @@ public class Pac : Character {
         else return (int)direction.STOP;
     }
 
-    public override void ManageHealth()
-    {
-        
-    }
-
-    public override void Update()
-    {
-        base.Update();
-
-        Reset();
-        if (Input.GetKey(KeyCode.Z) && !spawned)
-        {
-            decay = 0.5f;
-            spawned = true;
-            ui_handler.DecreaseHealth();
-        }
-        else if (Input.GetKey(KeyCode.X) && !spawned)
-        {
-            decay = 0.5f;
-            spawned = true;
-            ui_handler.IncreaseHealth();
-        }
-    }
 
     private void Reset()
     {

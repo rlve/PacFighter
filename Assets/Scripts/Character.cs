@@ -5,10 +5,10 @@ using UnityEngine;
 public class Character : MonoBehaviour {
 
     public float speed;
-    Animator anim;
+    public Animator anim;
 
     public enum direction : int { UP, RIGHT, DOWN, LEFT, STOP }
-    string directionVariable = "direction";
+    public string directionVariable = "direction";
 
     GameObject me;
     int currentDir;

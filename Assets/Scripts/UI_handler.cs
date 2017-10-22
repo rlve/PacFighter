@@ -9,6 +9,7 @@ public class UI_handler : MonoBehaviour {
     int heart_width = 20;
     int heartsDisplayed = 5;
      
+    //dodac wyswietlanie swordow za zdobyte punkty!
 
     // Use this for initialization
     void Start()

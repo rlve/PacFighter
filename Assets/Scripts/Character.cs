@@ -4,30 +4,56 @@ using UnityEngine;
 
 public class Character : MonoBehaviour {
 
-    public float speed = 4.0F;
+    public float speed;
     Animator anim;
 
     public enum direction : int { UP, RIGHT, DOWN, LEFT, STOP }
     string directionVariable = "direction";
 
+    GameObject me;
+    int currentDir;
+    int frameCounter = 0;
+ 
+
     // Use this for initialization
     void Start () {
         anim = GetComponent<Animator>();
+        speed = 2;
+
+        me = this.gameObject;
     }
 	
 	// Update is called once per frame
 	void Update () {
-        Movement(GetDirection());
+
+        Movement(GetDirection());     
 	}
+
 
     public virtual int GetDirection()
     {
-        return Random.Range(0, 3);
+        if (this.frameCounter == 0 )
+        {
+            frameCounter = Random.Range(8, 20);
+            currentDir = Random.Range(0, 4);
+        }
+        frameCounter--;
+
+        Debug.Log(new
+        {
+            me.name,
+            currentDir,
+            frameCounter
+        });
+
+        return currentDir;
     }
     
 
     void Movement(int dir)
     {
+       
+
         switch (dir)
         {
             case (int)direction.UP:

@@ -13,10 +13,12 @@ public class Character : MonoBehaviour {
     GameObject me;
     int currentDir;
     int frameCounter = 0;
- 
+
+
+
 
     // Use this for initialization
-    void Start () {
+    public virtual void Start () {
         anim = GetComponent<Animator>();
         speed = 2;
 
@@ -24,10 +26,15 @@ public class Character : MonoBehaviour {
     }
 	
 	// Update is called once per frame
-	void Update () {
-
+	public virtual void Update () {
+        ManageHealth();
         Movement(GetDirection());     
 	}
+
+    public virtual void ManageHealth()
+    {
+
+    }
 
 
     public virtual int GetDirection()

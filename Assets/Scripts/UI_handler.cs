@@ -6,15 +6,29 @@ using UnityEngine.UI;
 
 public class UI_handler : MonoBehaviour {
     public GameObject[] hearts;
-    int heart_w = 20;
+    int heart_width = 20;
+    int heartsDisplayed = 5;
+     
 
     // Use this for initialization
     void Start()
     {
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < heartsDisplayed; i++)
         {
-            hearts[i].transform.localPosition += new Vector3((i* heart_w) + (i*5), 0, 0);
+            hearts[i].transform.localPosition += new Vector3((i* heart_width) + (i*5), 0, 0);
         }
+    }
+
+    public void DecreaseHealth()
+    {
+        heartsDisplayed--;
+        Hide(hearts[heartsDisplayed]);
+    }
+
+    public void IncreaseHealth()
+    {
+        Show(hearts[heartsDisplayed]);
+        heartsDisplayed++;
     }
 
     void Hide(GameObject obj)

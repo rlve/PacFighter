@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class ParticleTimer : MonoBehaviour {
     public float timer;
-    public GameObject swordEffect;
 
     // Use this for initialization
     void Start()

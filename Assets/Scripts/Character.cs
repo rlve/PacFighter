@@ -4,54 +4,54 @@ using UnityEngine;
 
 public class Character : MonoBehaviour {
 
+    public byte maxHealth;
+    public byte currentHealth;
+
     public float speed;
     public Animator anim;
 
     public enum direction : int { UP, RIGHT, DOWN, LEFT, STOP }
     public string directionVariable = "direction";
 
-    GameObject me;
     int currentDir;
     int frameCounter = 0;
-
-
-
 
     // Use this for initialization
     public virtual void Start () {
         anim = GetComponent<Animator>();
         speed = 2;
-
-        me = this.gameObject;
     }
 	
 	// Update is called once per frame
 	public virtual void Update () {
-        ManageHealth();
-        Movement(GetDirection());     
-	}
+        
+        Movement(GetDirection());
+    }
 
-    public virtual void ManageHealth()
+    public virtual void DecreaseHealth()
     {
 
+    }
+
+    public virtual void IncreaseHealth()
+    {
+
+    }
+
+    public void ChangeDirection()
+    {
+        frameCounter = 0;
     }
 
 
     public virtual int GetDirection()
     {
-        if (this.frameCounter == 0 )
+        if (frameCounter == 0 )
         {
             frameCounter = Random.Range(8, 20);
             currentDir = Random.Range(0, 4);
         }
         frameCounter--;
-
-        Debug.Log(new
-        {
-            me.name,
-            currentDir,
-            frameCounter
-        });
 
         return currentDir;
     }
@@ -59,8 +59,6 @@ public class Character : MonoBehaviour {
 
     void Movement(int dir)
     {
-       
-
         switch (dir)
         {
             case (int)direction.UP:

@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Pac : Character {
-    public byte maxHealth = 5;
-    byte currentHealth;
+    
     public int distantPower = 250;
     public bool canMove;
 
@@ -18,6 +17,7 @@ public class Pac : Character {
     public override void Start()
     {
         base.Start();
+        maxHealth = 5;
         currentHealth = maxHealth;
         canMove = true;
     }
@@ -73,16 +73,13 @@ public class Pac : Character {
         else if (swordDir == (int)direction.LEFT)
         {
             newSword.transform.Rotate(0, 0, 90);
+            //newSword.GetComponent<SpriteRenderer>().flipX = true;
             newSword.GetComponent<Rigidbody2D>().AddForce(Vector2.left * distantPower);
         }
     }
 
-    public override void ManageHealth()
-    {
-        
-    }
 
-    void DecreaseHealth()
+    public override void DecreaseHealth()
     {
         ui_handler.DecreaseHealth();
         if (currentHealth > 0)
@@ -95,7 +92,7 @@ public class Pac : Character {
         }
     }
 
-    void IncreaseHealth()
+    public override void IncreaseHealth()
     {
         ui_handler.IncreaseHealth();
         if (currentHealth<maxHealth)

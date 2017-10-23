@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Sword : MonoBehaviour {
+public class Weapon : MonoBehaviour {
     float timer = .15F;
-    public GameObject swordEffect;
+
 
 	// Use this for initialization
 	void Start () {
@@ -18,9 +18,11 @@ public class Sword : MonoBehaviour {
         if (timer <= 0)
         {
             GameObject.FindGameObjectWithTag("Player").GetComponent<Pac>().canMove = true;
-           // Instantiate(swordEffect, transform.position, transform.rotation);
+          
             Destroy(gameObject);
         }
 		
 	}
+
+
 }

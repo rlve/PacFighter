@@ -13,9 +13,6 @@ public class Character : MonoBehaviour {
     public enum direction : int { UP, RIGHT, DOWN, LEFT, STOP }
     public string directionVariable = "direction";
 
-    int currentDir;
-    int frameCounter = 0;
-
     // Use this for initialization
     public virtual void Start () {
         anim = GetComponent<Animator>();
@@ -38,22 +35,10 @@ public class Character : MonoBehaviour {
 
     }
 
-    public void ChangeDirection()
-    {
-        frameCounter = 0;
-    }
-
 
     public virtual int GetDirection()
     {
-        if (frameCounter == 0 )
-        {
-            frameCounter = Random.Range(8, 20);
-            currentDir = Random.Range(0, 4);
-        }
-        frameCounter--;
-
-        return currentDir;
+        return 0;
     }
     
 

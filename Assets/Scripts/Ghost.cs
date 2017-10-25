@@ -4,13 +4,41 @@ using UnityEngine;
 
 public class Ghost : Character {
     public GameObject destroyEffect;
-    
+    int currentDir;
+    int frameCounter = 0;
+    bool changeDirection = false;
 
     public override void Start()
     {
         base.Start();
         maxHealth = 1;
         currentHealth = maxHealth;
+    }
+
+    public override int GetDirection()
+    {
+        
+        currentDir = Random.Range(0, 4);
+        
+
+        if (changeDirection)
+        {
+            if (currentDir == (int)direction.LEFT)
+            {
+                currentDir = (int)direction.UP;
+            } else
+            {
+                currentDir++;
+            }
+            
+        }
+
+        return currentDir;
+    }
+
+    public void ChangeDirection()
+    {
+        frameCounter = 0;
     }
 
     void OnCollisionEnter2D(Collision2D col)

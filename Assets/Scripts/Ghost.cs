@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Ghost : Character {
+    public GameObject[] junctions;
+
+    Vector3 curentPosition;
+    int current;
+
     public GameObject destroyEffect;
     int currentDir;
     int frameCounter = 0;
@@ -13,10 +18,27 @@ public class Ghost : Character {
         base.Start();
         maxHealth = 1;
         currentHealth = maxHealth;
+
+        junctions = GameObject.FindGameObjectsWithTag("Junctions");
     }
+    
+
+    //public override void Update()
+    //{
+    //    if (transform.position != junctions[current].transform.position)
+    //    {
+    //        Vector3 pos = Vector3.MoveTowards(transform.position, junctions[current].transform.position, speed * Time.deltaTime);
+    //        GetComponent<Rigidbody2D>().MovePosition(pos);
+    //    } else
+    //    {
+    //        current = (current + 1) % junctions.Length;
+    //    } 
+    //}
 
     public override int GetDirection()
     {
+        //stop moving
+        return 5;
         
         currentDir = Random.Range(0, 4);
         
@@ -47,10 +69,10 @@ public class Ghost : Character {
         {
             col.gameObject.GetComponent<Pac>().DecreaseHealth();
         }
-        else if (col.gameObject.tag == "Wall")
-        {
-            ChangeDirection();
-        }
+        //else if (col.gameObject.tag == "Wall")
+        //{
+        //    ChangeDirection();
+        //}
     }
 
     void OnTriggerEnter2D(Collider2D col)

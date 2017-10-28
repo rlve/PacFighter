@@ -22,7 +22,6 @@ public class Character : MonoBehaviour {
 	// Update is called once per frame
 	public virtual void Update () {
         
-        Movement(GetDirection());
     }
 
     public virtual void DecreaseHealth()
@@ -40,36 +39,11 @@ public class Character : MonoBehaviour {
     {
         return 0;
     }
-    
 
-    void Movement(int dir)
+
+    public virtual void Movement()
     {
-        switch (dir)
-        {
-            case (int)direction.UP:
-                transform.Translate(0, speed * Time.deltaTime, 0);
-                anim.SetInteger(directionVariable, (int)direction.UP);
-                anim.speed = 1;
-                break;
-            case (int)direction.RIGHT:
-                transform.Translate(speed * Time.deltaTime, 0, 0);
-                anim.SetInteger(directionVariable, (int)direction.RIGHT);
-                anim.speed = 1;
-                break;
-            case (int)direction.DOWN:
-                transform.Translate(0, -speed * Time.deltaTime, 0);
-                anim.SetInteger(directionVariable, (int)direction.DOWN);
-                anim.speed = 1;
-                break;
-            case (int)direction.LEFT:
-                transform.Translate(-speed * Time.deltaTime, 0, 0);
-                anim.SetInteger(directionVariable, (int)direction.LEFT);
-                anim.speed = 1;
-                break;
-            default:
-                anim.speed = 0;
-                break;
-        }
+
 
 
     }

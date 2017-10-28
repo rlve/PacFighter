@@ -1,9 +1,25 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
+using NesScripts.Controls.PathFind;
+
+
 
 public class Ghost : Character {
-    public GameObject[] junctions;
+    TilesCounter tilesCounter;
+    Pathfinding pathFinder;
+    NesScripts.Controls.PathFind.Grid grid;
+    public List<Point> path;
+
+    Tilemap tileMap;
+    int tileMapWidth;
+    int tileMapHeight;
+
+    bool[,] tileArray;
+
+    public Vector3Int cellPositionGhost;
+    public Vector3Int cellPositionPac;
 
     Vector3 curentPosition;
     int current;
@@ -13,49 +29,50 @@ public class Ghost : Character {
     int frameCounter = 0;
     bool changeDirection = false;
 
+    GameObject Pac;
+
     public override void Start()
     {
         base.Start();
         maxHealth = 1;
         currentHealth = maxHealth;
 
-        junctions = GameObject.FindGameObjectsWithTag("Junctions");
+        tilesCounter = FindObjectOfType<Tilemap>().GetComponent<TilesCounter>();
+        tileArray = tilesCounter.GetTileArrays();
+
+        tileMap = tilesCounter.GetTilemap();
+        tileMapWidth = tilesCounter.GetMapSizeInCells()[0];
+        tileMapHeight = tilesCounter.GetMapSizeInCells()[1];
+
+        grid = new NesScripts.Controls.PathFind.Grid(tileMapWidth, tileMapHeight, tileArray);
+
+        Pac = GameObject.FindGameObjectWithTag("Player");
     }
-    
 
-    //public override void Update()
-    //{
-    //    if (transform.position != junctions[current].transform.position)
-    //    {
-    //        Vector3 pos = Vector3.MoveTowards(transform.position, junctions[current].transform.position, speed * Time.deltaTime);
-    //        GetComponent<Rigidbody2D>().MovePosition(pos);
-    //    } else
-    //    {
-    //        current = (current + 1) % junctions.Length;
-    //    } 
-    //}
 
-    public override int GetDirection()
+    public override void Update()
     {
-        //stop moving
-        return 5;
-        
-        currentDir = Random.Range(0, 4);
-        
+        //    if (transform.position != junctions[current].transform.position)
+        //    {
+        //        Vector3 pos = Vector3.MoveTowards(transform.position, junctions[current].transform.position, speed * Time.deltaTime);
+        //        GetComponent<Rigidbody2D>().MovePosition(pos);
+        //    }
+        //    else
+        //    {
+        //        current = (current + 1) % junctions.Length;
+        //    }
 
-        if (changeDirection)
-        {
-            if (currentDir == (int)direction.LEFT)
-            {
-                currentDir = (int)direction.UP;
-            } else
-            {
-                currentDir++;
-            }
-            
-        }
+        Movement();
+        
+    }
 
-        return currentDir;
+    public override void Movement()
+    {
+        cellPositionPac = tileMap.WorldToCell(Pac.transform.position);
+        cellPositionGhost = tileMap.WorldToCell(transform.position);
+
+        path = Pathfinding.FindPath(grid, tilesCounter.LocalGridToPathGrid(cellPositionGhost), tilesCounter.LocalGridToPathGrid(cellPositionPac));
+        //Debug.Log("");
     }
 
     public void ChangeDirection()

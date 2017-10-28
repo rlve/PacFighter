@@ -24,7 +24,7 @@ public class Pac : Character {
 
     public override void Update()
     {
-        base.Update();
+        Movement();
 
         if (Input.GetKeyDown(KeyCode.Space) && !spawned)
         {
@@ -100,6 +100,36 @@ public class Pac : Character {
             currentHealth++;
         }
         
+    }
+
+    public override void Movement()
+    {
+        switch (GetDirection())
+        {
+            case (int)direction.UP:
+                transform.Translate(0, speed * Time.deltaTime, 0);
+                anim.SetInteger(directionVariable, (int)direction.UP);
+                anim.speed = 1;
+                break;
+            case (int)direction.RIGHT:
+                transform.Translate(speed * Time.deltaTime, 0, 0);
+                anim.SetInteger(directionVariable, (int)direction.RIGHT);
+                anim.speed = 1;
+                break;
+            case (int)direction.DOWN:
+                transform.Translate(0, -speed * Time.deltaTime, 0);
+                anim.SetInteger(directionVariable, (int)direction.DOWN);
+                anim.speed = 1;
+                break;
+            case (int)direction.LEFT:
+                transform.Translate(-speed * Time.deltaTime, 0, 0);
+                anim.SetInteger(directionVariable, (int)direction.LEFT);
+                anim.speed = 1;
+                break;
+            default:
+                anim.speed = 0;
+                break;
+        }
     }
 
     public override int GetDirection()

@@ -12,7 +12,7 @@ public class Ghost : Character {
     NesScripts.Controls.PathFind.Grid grid;
     public List<Point> path;
 
-    Tilemap tileMap;
+    public Tilemap tileMap;
     int tileMapWidth;
     int tileMapHeight;
 
@@ -38,13 +38,12 @@ public class Ghost : Character {
         currentHealth = maxHealth;
 
         tilesCounter = FindObjectOfType<Tilemap>().GetComponent<TilesCounter>();
-        tileArray = tilesCounter.GetTileArrays();
+        
 
-        tileMap = tilesCounter.GetTilemap();
-        tileMapWidth = tilesCounter.GetMapSizeInCells()[0];
-        tileMapHeight = tilesCounter.GetMapSizeInCells()[1];
+        //tileMap = tilesCounter.GetComponentInParent<Tilemap>();
+        tileMapWidth = -tileMap.cellBounds.xMin + tileMap.cellBounds.xMax;
+        tileMapHeight = -tileMap.cellBounds.yMin + tileMap.cellBounds.yMax;
 
-        grid = new NesScripts.Controls.PathFind.Grid(tileMapWidth, tileMapHeight, tileArray);
 
         Pac = GameObject.FindGameObjectWithTag("Player");
     }
@@ -68,6 +67,9 @@ public class Ghost : Character {
 
     public override void Movement()
     {
+        tileArray = tilesCounter.GetTileArrays();
+        grid = new NesScripts.Controls.PathFind.Grid(tileMapWidth, tileMapHeight, tileArray);
+
         cellPositionPac = tileMap.WorldToCell(Pac.transform.position);
         cellPositionGhost = tileMap.WorldToCell(transform.position);
 

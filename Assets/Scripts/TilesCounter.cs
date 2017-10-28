@@ -8,7 +8,7 @@ public class TilesCounter : MonoBehaviour {
 
     bool[,] tileArray;
 
-    public Tilemap tileMap = null;
+    public Tilemap tileMap;
 
     public List<Vector3> availablePlaces;
 
@@ -22,13 +22,29 @@ public class TilesCounter : MonoBehaviour {
 
     void Start()
     {
-        tileMap = transform.GetComponentInParent<Tilemap>();
+        //tileMap = transform.GetComponentInParent<Tilemap>();
         availablePlaces = new List<Vector3>();
 
         tileMapWidth = -tileMap.cellBounds.xMin + tileMap.cellBounds.xMax;
         tileMapHeight = -tileMap.cellBounds.yMin + tileMap.cellBounds.yMax;
         tileArray = new bool[tileMapWidth, tileMapHeight];
 
+
+    }
+
+    private void Update()
+    {
+        //LocalToPathResult = PointToVector(LocalGridToPathGrid(testLocalToPath));
+        //PathToLocalResult = PathGridToLocalGrid(VectorToPoint(testPathToLocal));
+    }
+
+    //public Tilemap GetTilemap()
+    //{
+    //    return tileMap;
+    //}
+
+    public bool[,] GetTileArrays()
+    {
         int arrayIndexN = 0;
         int arrayIndexP = 0;
 
@@ -55,36 +71,21 @@ public class TilesCounter : MonoBehaviour {
             }
             arrayIndexN++;
         }
-    }
-
-    private void Update()
-    {
-        //LocalToPathResult = PointToVector(LocalGridToPathGrid(testLocalToPath));
-        //PathToLocalResult = PathGridToLocalGrid(VectorToPoint(testPathToLocal));
-    }
-
-    public Tilemap GetTilemap()
-    {
-        return tileMap;
-    }
-
-    public bool[,] GetTileArrays()
-    {
         return tileArray;
     }
 
-    public int[] GetMapSizeInCells()
-    {
-        return new int[] { tileMapWidth, tileMapHeight };
-    }
+    //public int[] GetMapSizeInCells()
+    //{
+    //    return new int[] { tileMapWidth, tileMapHeight };
+    //}
 
     public Point LocalGridToPathGrid (Vector3Int localGrid)
     {
-        return new Point(localGrid.x + (-1) * (tileMap.cellBounds.xMin), (-1) * localGrid.y + (tileMap.cellBounds.yMax - 1)); ;
+        return new Point(localGrid.x + (-1) * (tileMap.cellBounds.xMin), (-1) * localGrid.y + (tileMap.cellBounds.yMax - 1));
     }
     public Vector3Int PathGridToLocalGrid(Point pathGrid)
     {
-        return new Vector3Int(pathGrid.x + tileMap.cellBounds.xMin, -pathGrid.y + (tileMap.cellBounds.yMax - 1),0); ;
+        return new Vector3Int(pathGrid.x + tileMap.cellBounds.xMin, -pathGrid.y + (tileMap.cellBounds.yMax - 1),0);
     }
 
     public Vector3Int PointToVector(Point point)

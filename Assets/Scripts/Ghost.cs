@@ -41,7 +41,7 @@ public class Ghost : Character {
 
     GameObject Pac;
 
-    
+    public UI_handler ui_handler;
 
     public override void Start()
     {
@@ -49,6 +49,7 @@ public class Ghost : Character {
         maxHealth = 1;
         currentHealth = maxHealth;
         speed = 1.2F;
+        ui_handler = GameObject.Find("Canvas").GetComponent<UI_handler>();
 
         tilesCounter = FindObjectOfType<Tilemap>().GetComponent<TilesCounter>();
 
@@ -75,6 +76,11 @@ public class Ghost : Character {
 
     public override void Movement()
     {
+      if (ui_handler.gameOver)
+        {
+            return;
+        }
+
         if (canFindPath == true)
         {
             if (randomCounterBreak == 0)
@@ -109,7 +115,7 @@ public class Ghost : Character {
             var difference = pathWorldPos[firstStep] - transform.position;
             differenceMagnitude = difference.magnitude;
 
-            if (differenceMagnitude > 0.015F)
+            if (differenceMagnitude > 0.05F)
             {
                 Vector3 direction = (pathWorldPos[firstStep] - transform.position).normalized;
 

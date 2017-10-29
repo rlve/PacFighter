@@ -9,11 +9,12 @@ public class UI_handler : MonoBehaviour {
     public GameObject[] gems;
     public GameObject scoreText;
     public GameObject attackText;
+    public GameObject gameOverText;
 
     int heart_width = 20;
     int heartsDisplayed;
-     
-    //dodac wyswietlanie swordow za zdobyte punkty!
+
+    public bool gameOver = false;
 
     // Use this for initialization
     void Start()
@@ -70,6 +71,12 @@ public class UI_handler : MonoBehaviour {
     // Update is called once per frame
     void Update () {
         UpdateScore();
+
+        if (gameOver)
+        {
+            scoreText.GetComponent<Text>().enabled = false;
+            gameOverText.GetComponent<Text>().enabled = true;
+        }
     }
 
     public virtual void SetPosition()

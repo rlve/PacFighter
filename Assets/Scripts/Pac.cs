@@ -81,7 +81,12 @@ public class Pac : Character {
         if (invincible == true)
         {
             invTimer -= Time.deltaTime;
-            Flicker();
+
+            if (!ui_handler.gameOver)
+            {
+                Flicker();
+            }
+            
 
             if (invTimer<=0)
             {
@@ -119,10 +124,11 @@ public class Pac : Character {
     {
         if (col.gameObject.tag == "Gem")
         {
-            //foreach (var enemy in enemies)
-            //{
-            //enemy.GetComponent<Ghost>().IncreaseSpeed();
-            //}
+            enemies = GameObject.FindGameObjectsWithTag("Enemy");
+            foreach (var enemy in enemies)
+            {
+                enemy.GetComponent<Ghost>().IncreaseSpeed();
+            }
             Destroy(col.gameObject);
         }
         else if (col.gameObject.name == "Sword") 
@@ -169,14 +175,17 @@ public class Pac : Character {
 
     public override void DecreaseHealth()
     {
-        ui_handler.DecreaseHealth();
+        
         if (currentHealth > 0)
         {
             currentHealth--;
+            ui_handler.DecreaseHealth();
         }
         else
         {
-            //game over
+            canMove = false;
+            ui_handler.gameOver = true;
+            
         }
     }
 

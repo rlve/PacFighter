@@ -13,13 +13,10 @@ public class Character : MonoBehaviour {
     public enum direction : int { UP, RIGHT, DOWN, LEFT, STOP }
     public string directionVariable = "direction";
 
-    // Use this for initialization
     public virtual void Start () {
-        anim = GetComponent<Animator>();
-        
+        anim = GetComponent<Animator>();        
     }
 	
-	// Update is called once per frame
 	public virtual void Update () {
         
     }

@@ -358,12 +358,12 @@ Prefab:
     - target: {fileID: 61446682617763492, guid: d69cce98a96fc46468ff8dd4813c5e8f,
         type: 2}
       propertyPath: m_Size.x
-      value: 0.31
+      value: 0.28
       objectReference: {fileID: 0}
     - target: {fileID: 61446682617763492, guid: d69cce98a96fc46468ff8dd4813c5e8f,
         type: 2}
       propertyPath: m_Size.y
-      value: 0.31
+      value: 0.28
       objectReference: {fileID: 0}
     - target: {fileID: 114226970459207522, guid: d69cce98a96fc46468ff8dd4813c5e8f,
         type: 2}
@@ -373,12 +373,17 @@ Prefab:
     - target: {fileID: 61446682617763492, guid: d69cce98a96fc46468ff8dd4813c5e8f,
         type: 2}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114226970459207522, guid: d69cce98a96fc46468ff8dd4813c5e8f,
         type: 2}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 61446682617763492, guid: d69cce98a96fc46468ff8dd4813c5e8f,
+        type: 2}
+      propertyPath: m_AutoTiling
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d69cce98a96fc46468ff8dd4813c5e8f, type: 2}

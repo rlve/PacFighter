@@ -14,7 +14,6 @@ public class Ghost : Character {
 
     public List<Vector3> pathWorldPos;
     public List<Vector3> __tempPathWorldPos;
-    public List<Vector3> currentPathWorldPos;
     public List<Vector3> newPathWorldPos;
 
     public Tilemap tileMap;
@@ -33,7 +32,7 @@ public class Ghost : Character {
     public bool canFindPath = true;
     public float differenceMagnitude;
 
-    public int current = 0;
+    public int firstStep = 0;
 
     public GameObject destroyEffect;
 
@@ -44,12 +43,12 @@ public class Ghost : Character {
         base.Start();
         maxHealth = 1;
         currentHealth = maxHealth;
-        speed = 0.3F;
+        speed = 1.2F;
 
         tilesCounter = FindObjectOfType<Tilemap>().GetComponent<TilesCounter>();
-        
 
-        //tileMap = tilesCounter.GetComponentInParent<Tilemap>();
+
+        tileMap = tilesCounter.GetComponentInParent<Tilemap>();
         tileMapWidth = -tileMap.cellBounds.xMin + tileMap.cellBounds.xMax;
         tileMapHeight = -tileMap.cellBounds.yMin + tileMap.cellBounds.yMax;
 
@@ -102,12 +101,12 @@ public class Ghost : Character {
 
         if (pathWorldPos.Count != 0)
         {
-            var difference = pathWorldPos[current] - transform.position;
+            var difference = pathWorldPos[firstStep] - transform.position;
             differenceMagnitude = difference.magnitude;
 
-            if (differenceMagnitude > 0.005F)
+            if (differenceMagnitude > 0.015F)
             {
-                Vector3 direction = (pathWorldPos[current] - transform.position).normalized;
+                Vector3 direction = (pathWorldPos[firstStep] - transform.position).normalized;
                 currentDir = direction;
 
 
@@ -115,15 +114,8 @@ public class Ghost : Character {
             }
             else
             {
-                current = (current + 1) % pathWorldPos.Count;
+                canFindPath = true;
             }
-        }
-
-
-        if (tileMap.WorldToCell(Pac.transform.position) == tileMap.WorldToCell(transform.position))
-        {
-            canFindPath = true;
-            current = 0;
         }
 
     }

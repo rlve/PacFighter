@@ -10,11 +10,13 @@ public class UI_handler : MonoBehaviour {
     public GameObject scoreText;
     public GameObject attackText;
     public GameObject gameOverText;
+    public GameObject gameWinText;
 
     int heart_width = 20;
     int heartsDisplayed;
 
     public bool gameOver = false;
+    public bool gameWin = false;
 
     // Use this for initialization
     void Start()
@@ -44,6 +46,11 @@ public class UI_handler : MonoBehaviour {
         gems = GameObject.FindGameObjectsWithTag("Gem");
 
         scoreText.GetComponent<Text>().text = "GEMS LEFT: " + gems.Length.ToString();
+
+        if (gems.Length == 0)
+        {
+            gameWin = true;
+        }
     }
 
     public void DecreaseHealth()
@@ -76,6 +83,12 @@ public class UI_handler : MonoBehaviour {
         {
             scoreText.GetComponent<Text>().enabled = false;
             gameOverText.GetComponent<Text>().enabled = true;
+        }
+
+        if (gameWin)
+        {
+            scoreText.GetComponent<Text>().enabled = false;
+            gameWinText.GetComponent<Text>().enabled = true;
         }
     }
 

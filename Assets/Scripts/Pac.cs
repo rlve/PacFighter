@@ -203,6 +203,11 @@ public class Pac : Character {
 
     public override void Movement()
     {
+        if (ui_handler.gameOver || ui_handler.gameWin)
+        {
+            return;
+        }
+
         switch (GetDirection())
         {
             case (int)direction.UP:

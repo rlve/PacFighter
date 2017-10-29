@@ -76,7 +76,7 @@ public class Ghost : Character {
 
     public override void Movement()
     {
-      if (ui_handler.gameOver)
+      if (ui_handler.gameOver || ui_handler.gameWin)
         {
             return;
         }

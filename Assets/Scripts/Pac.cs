@@ -20,6 +20,7 @@ public class Pac : Character {
         maxHealth = 5;
         currentHealth = maxHealth;
         canMove = true;
+        speed = 2;
     }
 
     public override void Update()

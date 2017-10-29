@@ -12,6 +12,11 @@ public class Ghost : Character {
     NesScripts.Controls.PathFind.Grid grid;
     public List<Point> path;
 
+    public List<Vector3> pathWorldPos;
+    public List<Vector3> __tempPathWorldPos;
+    public List<Vector3> currentPathWorldPos;
+    public List<Vector3> newPathWorldPos;
+
     public Tilemap tileMap;
     int tileMapWidth;
     int tileMapHeight;
@@ -21,13 +26,16 @@ public class Ghost : Character {
     public Vector3Int cellPositionGhost;
     public Vector3Int cellPositionPac;
 
-    Vector3 curentPosition;
-    int current;
+
+    public Vector3 currentPathWorld;
+    public Vector3 currentGhost;
+    public Vector3 currentDir;
+    public bool canFindPath = true;
+    public float differenceMagnitude;
+
+    public int current = 0;
 
     public GameObject destroyEffect;
-    int currentDir;
-    int frameCounter = 0;
-    bool changeDirection = false;
 
     GameObject Pac;
 
@@ -36,6 +44,7 @@ public class Ghost : Character {
         base.Start();
         maxHealth = 1;
         currentHealth = maxHealth;
+        speed = 0.3F;
 
         tilesCounter = FindObjectOfType<Tilemap>().GetComponent<TilesCounter>();
         
@@ -51,21 +60,11 @@ public class Ghost : Character {
 
     public override void Update()
     {
-        //    if (transform.position != junctions[current].transform.position)
-        //    {
-        //        Vector3 pos = Vector3.MoveTowards(transform.position, junctions[current].transform.position, speed * Time.deltaTime);
-        //        GetComponent<Rigidbody2D>().MovePosition(pos);
-        //    }
-        //    else
-        //    {
-        //        current = (current + 1) % junctions.Length;
-        //    }
-
-        Movement();
+        
         
     }
 
-    public override void Movement()
+    List<Vector3> FindPath()
     {
         tileArray = tilesCounter.GetTileArrays();
         grid = new NesScripts.Controls.PathFind.Grid(tileMapWidth, tileMapHeight, tileArray);
@@ -74,12 +73,59 @@ public class Ghost : Character {
         cellPositionGhost = tileMap.WorldToCell(transform.position);
 
         path = Pathfinding.FindPath(grid, tilesCounter.LocalGridToPathGrid(cellPositionGhost), tilesCounter.LocalGridToPathGrid(cellPositionPac));
-        //Debug.Log("");
+
+        __tempPathWorldPos.Clear();
+
+        foreach (var cell in path)
+        {
+            var localCell = tilesCounter.PathGridToLocalGrid(cell);
+            __tempPathWorldPos.Add(tileMap.GetCellCenterWorld(localCell));
+        }
+
+        pathWorldPos = __tempPathWorldPos;
+        return pathWorldPos;
     }
 
-    public void ChangeDirection()
+    private void FixedUpdate()
     {
-        frameCounter = 0;
+        
+        Movement();
+    }
+
+    public override void Movement()
+    {
+        if (canFindPath == true)
+        {
+            FindPath();
+            canFindPath = false;
+        }
+
+        if (pathWorldPos.Count != 0)
+        {
+            var difference = pathWorldPos[current] - transform.position;
+            differenceMagnitude = difference.magnitude;
+
+            if (differenceMagnitude > 0.005F)
+            {
+                Vector3 direction = (pathWorldPos[current] - transform.position).normalized;
+                currentDir = direction;
+
+
+                GetComponent<Rigidbody2D>().MovePosition(transform.position + direction * speed * Time.deltaTime);
+            }
+            else
+            {
+                current = (current + 1) % pathWorldPos.Count;
+            }
+        }
+
+
+        if (tileMap.WorldToCell(Pac.transform.position) == tileMap.WorldToCell(transform.position))
+        {
+            canFindPath = true;
+            current = 0;
+        }
+
     }
 
     void OnCollisionEnter2D(Collision2D col)

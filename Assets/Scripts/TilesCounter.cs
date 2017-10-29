@@ -15,11 +15,6 @@ public class TilesCounter : MonoBehaviour {
     int tileMapWidth;
     int tileMapHeight;
 
-    //public Vector3Int testLocalToPath;
-    //public Vector3Int LocalToPathResult;
-    //public Vector3Int testPathToLocal;
-    //public Vector3Int PathToLocalResult;
-
     void Start()
     {
         //tileMap = transform.GetComponentInParent<Tilemap>();
@@ -28,22 +23,11 @@ public class TilesCounter : MonoBehaviour {
         tileMapWidth = -tileMap.cellBounds.xMin + tileMap.cellBounds.xMax;
         tileMapHeight = -tileMap.cellBounds.yMin + tileMap.cellBounds.yMax;
         tileArray = new bool[tileMapWidth, tileMapHeight];
-
+        PrepareTileArrays();
 
     }
 
-    private void Update()
-    {
-        //LocalToPathResult = PointToVector(LocalGridToPathGrid(testLocalToPath));
-        //PathToLocalResult = PathGridToLocalGrid(VectorToPoint(testPathToLocal));
-    }
-
-    //public Tilemap GetTilemap()
-    //{
-    //    return tileMap;
-    //}
-
-    public bool[,] GetTileArrays()
+    void PrepareTileArrays()
     {
         int arrayIndexN = 0;
         int arrayIndexP = 0;
@@ -71,13 +55,12 @@ public class TilesCounter : MonoBehaviour {
             }
             arrayIndexN++;
         }
-        return tileArray;
     }
 
-    //public int[] GetMapSizeInCells()
-    //{
-    //    return new int[] { tileMapWidth, tileMapHeight };
-    //}
+    public bool[,] GetTileArrays()
+    {
+        return tileArray;
+    }
 
     public Point LocalGridToPathGrid (Vector3Int localGrid)
     {

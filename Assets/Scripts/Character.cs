@@ -16,7 +16,7 @@ public class Character : MonoBehaviour {
     // Use this for initialization
     public virtual void Start () {
         anim = GetComponent<Animator>();
-        speed = 2;
+        
     }
 	
 	// Update is called once per frame

@@ -41,6 +41,8 @@ public class Ghost : Character {
 
     GameObject Pac;
 
+    
+
     public override void Start()
     {
         base.Start();
@@ -73,12 +75,8 @@ public class Ghost : Character {
 
     public override void Movement()
     {
-        
-
         if (canFindPath == true)
         {
-            
-
             if (randomCounterBreak == 0)
             {
                 randomCounterBreak = 1000;
@@ -97,7 +95,8 @@ public class Ghost : Character {
 
             FindPath(currentTarget);
             canFindPath = false;
-        } else
+        }
+        else
         {
             if (cellPositionGhost == cellPositionTarget)
             {
@@ -113,6 +112,8 @@ public class Ghost : Character {
             if (differenceMagnitude > 0.015F)
             {
                 Vector3 direction = (pathWorldPos[firstStep] - transform.position).normalized;
+
+                SetAnimation(direction);
 
                 GetComponent<Rigidbody2D>().MovePosition(transform.position + direction * speed * Time.deltaTime);
             }
@@ -159,11 +160,35 @@ public class Ghost : Character {
         pathWorldPos = __tempPathWorldPos;
     }
 
+    void SetAnimation(Vector3 dir)
+    {
+        if (dir.x >0.95 && dir.x < 1.05)
+        {
+            anim.SetInteger(directionVariable, (int)direction.RIGHT);
+        } else if (dir.x < -0.95 && dir.x > -1.05)
+        {
+            anim.SetInteger(directionVariable, (int)direction.LEFT);
+        }
+        else if (dir.y > 0.95 && dir.y < 1.05)
+        {
+            anim.SetInteger(directionVariable, (int)direction.UP);
+        }
+        else if (dir.y < -0.95 && dir.y > -1.05)
+        {
+            anim.SetInteger(directionVariable, (int)direction.DOWN);
+        }
+    }
+
+    public void IncreaseSpeed()
+    {
+        speed += 0.1F;
+    }
+
     void OnCollisionEnter2D(Collision2D col)
     {
         if (col.gameObject.tag == "Player")
         {
-            col.gameObject.GetComponent<Pac>().DecreaseHealth();
+            randomCounterBreak = 0;
         }
         else if (col.gameObject.tag == "Enemy")
         {
@@ -176,6 +201,7 @@ public class Ghost : Character {
         if (col.gameObject.tag == "Weapon")
         {
             DecreaseHealth();
+            Pac.GetComponent<Pac>().canAttack = false;
         }
     }
 

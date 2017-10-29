@@ -4,12 +4,20 @@ using UnityEngine;
 
 public class Pac : Character {
     
-    public int distantPower = 250;
+    public int swordPower;
     public bool canMove;
 
+    SpriteRenderer sr;
     public UI_handler ui_handler;
     public GameObject sword;
 
+    public bool invincible;
+    float invTimer;
+
+    GameObject[] enemies;
+    List<BoxCollider2D> collidersToIgnore = new List<BoxCollider2D>();
+
+    public bool canAttack;
 
     bool spawned = false;
     float decay;
@@ -17,15 +25,28 @@ public class Pac : Character {
     public override void Start()
     {
         base.Start();
-        maxHealth = 5;
+        maxHealth = 3;
         currentHealth = maxHealth;
         canMove = true;
         speed = 2;
+        swordPower = 250;
+        invincible = false;
+        invTimer = 1.5F;
+        canAttack = false;
+
+        sr = GetComponent<SpriteRenderer>();
+
+        enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        foreach (var enemy in enemies)
+        {
+            collidersToIgnore.Add(enemy.GetComponent<BoxCollider2D>());
+        }
     }
 
     public override void Update()
     {
         Movement();
+        InvincibleHandler();
 
         if (Input.GetKeyDown(KeyCode.Space) && !spawned)
         {
@@ -49,36 +70,102 @@ public class Pac : Character {
         }
     }
 
-    void Attack()
+    void Flicker()
     {
-        canMove = false;
+        if (sr.enabled == true) sr.enabled = false;
+        else if (sr.enabled == false) sr.enabled = true;
+    }
 
-        GameObject newSword = Instantiate(sword, transform.position, sword.transform.rotation);
-        var swordDir = anim.GetInteger(directionVariable);
+    void InvincibleHandler()
+    {
+        if (invincible == true)
+        {
+            invTimer -= Time.deltaTime;
+            Flicker();
 
-        if (swordDir == (int)direction.UP)
-        {
-            newSword.transform.Rotate(0, 0, 0);
-            newSword.GetComponent<Rigidbody2D>().AddForce(Vector2.up * distantPower);
-        }
-        else if (swordDir == (int)direction.RIGHT)
-        {
-            newSword.transform.Rotate(0, 0, 270);
-            newSword.GetComponent<Rigidbody2D>().AddForce(Vector2.right * distantPower);
-        }
-        else if (swordDir == (int)direction.DOWN)
-        {
-            newSword.transform.Rotate(0, 0, 180);
-            newSword.GetComponent<Rigidbody2D>().AddForce(Vector2.down * distantPower);
-        }
-        else if (swordDir == (int)direction.LEFT)
-        {
-            newSword.transform.Rotate(0, 0, 90);
-            //newSword.GetComponent<SpriteRenderer>().flipX = true;
-            newSword.GetComponent<Rigidbody2D>().AddForce(Vector2.left * distantPower);
+            if (invTimer<=0)
+            {
+                invincible = false;
+                invTimer = 1F;
+                sr.enabled = true;
+
+                foreach (var enemyCollider in collidersToIgnore)
+                {
+                    Physics2D.IgnoreCollision(GetComponent<CircleCollider2D>(), enemyCollider, false);
+                }
+            }
         }
     }
 
+    void OnCollisionEnter2D(Collision2D col)
+    {
+        if (col.gameObject.tag == "Enemy")
+        {
+            if (!invincible)
+            {
+                DecreaseHealth();
+                invincible = true;
+
+                foreach (var enemyCollider in collidersToIgnore)
+                {
+                    Physics2D.IgnoreCollision(GetComponent<CircleCollider2D>(), enemyCollider);
+                }
+            }
+
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D col)
+    {
+        if (col.gameObject.tag == "Gem")
+        {
+            //foreach (var enemy in enemies)
+            //{
+            //enemy.GetComponent<Ghost>().IncreaseSpeed();
+            //}
+            Destroy(col.gameObject);
+        }
+        else if (col.gameObject.name == "Sword") 
+        {
+            canAttack = true;
+            ui_handler.DisplayAttackPrompt();
+            Destroy(col.gameObject);
+        }
+    }
+
+    void Attack()
+    {
+        if (canAttack)
+        {
+            canMove = false;
+
+            GameObject newSword = Instantiate(sword, transform.position, sword.transform.rotation);
+            var swordDir = anim.GetInteger(directionVariable);
+
+            if (swordDir == (int)direction.UP)
+            {
+                newSword.transform.Rotate(0, 0, 0);
+                newSword.GetComponent<Rigidbody2D>().AddForce(Vector2.up * swordPower);
+            }
+            else if (swordDir == (int)direction.RIGHT)
+            {
+                newSword.transform.Rotate(0, 0, 270);
+                newSword.GetComponent<Rigidbody2D>().AddForce(Vector2.right * swordPower);
+            }
+            else if (swordDir == (int)direction.DOWN)
+            {
+                newSword.transform.Rotate(0, 0, 180);
+                newSword.GetComponent<Rigidbody2D>().AddForce(Vector2.down * swordPower);
+            }
+            else if (swordDir == (int)direction.LEFT)
+            {
+                newSword.transform.Rotate(0, 0, 90);
+                //newSword.GetComponent<SpriteRenderer>().flipX = true;
+                newSword.GetComponent<Rigidbody2D>().AddForce(Vector2.left * swordPower);
+            }
+        }
+
+    }
 
     public override void DecreaseHealth()
     {
@@ -102,6 +189,8 @@ public class Pac : Character {
         }
         
     }
+
+
 
     public override void Movement()
     {

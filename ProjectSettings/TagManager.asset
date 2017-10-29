@@ -6,8 +6,7 @@ TagManager:
   tags:
   - Enemy
   - Weapon
-  - Walls
-  - Junctions
+  - Gem
   layers:
   - Default
   - TransparentFX

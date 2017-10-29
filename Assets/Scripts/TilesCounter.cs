@@ -23,8 +23,8 @@ public class TilesCounter : MonoBehaviour {
         tileMapWidth = -tileMap.cellBounds.xMin + tileMap.cellBounds.xMax;
         tileMapHeight = -tileMap.cellBounds.yMin + tileMap.cellBounds.yMax;
         tileArray = new bool[tileMapWidth, tileMapHeight];
-        PrepareTileArrays();
 
+        PrepareTileArrays();
     }
 
     void PrepareTileArrays()
@@ -42,14 +42,14 @@ public class TilesCounter : MonoBehaviour {
                 Vector3 place = tileMap.CellToWorld(localPlace);
                 if (tileMap.HasTile(localPlace))
                 {
+                    //Tile at "place" 
                     tileArray[arrayIndexN, arrayIndexP] = false;
-                    //Tile at "place"
-                    availablePlaces.Add(place);
                 }
                 else
                 {
                     //No tile at "place"
                     tileArray[arrayIndexN, arrayIndexP] = true;
+                    availablePlaces.Add(place);
                 }
                 arrayIndexP++;
             }

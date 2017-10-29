@@ -9,12 +9,12 @@ using NesScripts.Controls.PathFind;
 public class Ghost : Character {
     TilesCounter tilesCounter;
     Pathfinding pathFinder;
+
     NesScripts.Controls.PathFind.Grid grid;
     public List<Point> path;
 
     public List<Vector3> pathWorldPos;
     public List<Vector3> __tempPathWorldPos;
-    public List<Vector3> newPathWorldPos;
 
     public Tilemap tileMap;
     int tileMapWidth;
@@ -25,10 +25,6 @@ public class Ghost : Character {
     public Vector3Int cellPositionGhost;
     public Vector3Int cellPositionPac;
 
-
-    public Vector3 currentPathWorld;
-    public Vector3 currentGhost;
-    public Vector3 currentDir;
     public bool canFindPath = true;
     public float differenceMagnitude;
 
@@ -47,11 +43,9 @@ public class Ghost : Character {
 
         tilesCounter = FindObjectOfType<Tilemap>().GetComponent<TilesCounter>();
 
-
         tileMap = tilesCounter.GetComponentInParent<Tilemap>();
         tileMapWidth = -tileMap.cellBounds.xMin + tileMap.cellBounds.xMax;
         tileMapHeight = -tileMap.cellBounds.yMin + tileMap.cellBounds.yMax;
-
 
         Pac = GameObject.FindGameObjectWithTag("Player");
     }
@@ -63,7 +57,7 @@ public class Ghost : Character {
         
     }
 
-    List<Vector3> FindPath()
+    void FindPath()
     {
         tileArray = tilesCounter.GetTileArrays();
         grid = new NesScripts.Controls.PathFind.Grid(tileMapWidth, tileMapHeight, tileArray);
@@ -82,12 +76,10 @@ public class Ghost : Character {
         }
 
         pathWorldPos = __tempPathWorldPos;
-        return pathWorldPos;
     }
 
     private void FixedUpdate()
     {
-        
         Movement();
     }
 
@@ -107,8 +99,6 @@ public class Ghost : Character {
             if (differenceMagnitude > 0.015F)
             {
                 Vector3 direction = (pathWorldPos[firstStep] - transform.position).normalized;
-                currentDir = direction;
-
 
                 GetComponent<Rigidbody2D>().MovePosition(transform.position + direction * speed * Time.deltaTime);
             }
@@ -126,10 +116,10 @@ public class Ghost : Character {
         {
             col.gameObject.GetComponent<Pac>().DecreaseHealth();
         }
-        //else if (col.gameObject.tag == "Wall")
-        //{
-        //    ChangeDirection();
-        //}
+        else if (col.gameObject.tag == "Enemy")
+        {
+            Physics2D.IgnoreCollision(GetComponent<BoxCollider2D>(), col.collider);
+        }
     }
 
     void OnTriggerEnter2D(Collider2D col)
@@ -175,7 +165,6 @@ public class Ghost : Character {
         {
             main.startColor = new Color(0.5F, 0, 1, 0.7F);
         }
-
 
         Instantiate(destroyEffect, transform.position, transform.rotation);
     }

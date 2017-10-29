@@ -23,7 +23,14 @@ public class Ghost : Character {
     bool[,] tileArray;
 
     public Vector3Int cellPositionGhost;
-    public Vector3Int cellPositionPac;
+    public Vector3Int cellPositionTarget;
+
+    bool currentTarget;
+    bool findPac = true;
+    bool findRandom = false;
+    int randomCounterHowLong = 1000;
+    int randomCounterBreak;
+    int randomIndex;
 
     public bool canFindPath = true;
     public float differenceMagnitude;
@@ -48,34 +55,9 @@ public class Ghost : Character {
         tileMapHeight = -tileMap.cellBounds.yMin + tileMap.cellBounds.yMax;
 
         Pac = GameObject.FindGameObjectWithTag("Player");
-    }
 
-
-    public override void Update()
-    {
-        
-        
-    }
-
-    void FindPath()
-    {
-        tileArray = tilesCounter.GetTileArrays();
-        grid = new NesScripts.Controls.PathFind.Grid(tileMapWidth, tileMapHeight, tileArray);
-
-        cellPositionPac = tileMap.WorldToCell(Pac.transform.position);
-        cellPositionGhost = tileMap.WorldToCell(transform.position);
-
-        path = Pathfinding.FindPath(grid, tilesCounter.LocalGridToPathGrid(cellPositionGhost), tilesCounter.LocalGridToPathGrid(cellPositionPac));
-
-        __tempPathWorldPos.Clear();
-
-        foreach (var cell in path)
-        {
-            var localCell = tilesCounter.PathGridToLocalGrid(cell);
-            __tempPathWorldPos.Add(tileMap.GetCellCenterWorld(localCell));
-        }
-
-        pathWorldPos = __tempPathWorldPos;
+        currentTarget = findPac;
+        randomCounterBreak = Random.Range(100, 200);
     }
 
     private void FixedUpdate()
@@ -83,12 +65,44 @@ public class Ghost : Character {
         Movement();
     }
 
+
+    public override void Update()
+    {
+        
+    }
+
     public override void Movement()
     {
+        
+
         if (canFindPath == true)
         {
-            FindPath();
+            
+
+            if (randomCounterBreak == 0)
+            {
+                randomCounterBreak = 1000;
+
+                randomCounterHowLong = Random.Range(100, 200);
+                currentTarget = findRandom;     
+            } 
+
+            if (randomCounterHowLong == 0)
+            {
+                randomCounterHowLong = 1000;
+
+                randomCounterBreak = Random.Range(200, 500);
+                currentTarget = findPac;
+            }
+
+            FindPath(currentTarget);
             canFindPath = false;
+        } else
+        {
+            if (cellPositionGhost == cellPositionTarget)
+            {
+                canFindPath = true;
+            }
         }
 
         if (pathWorldPos.Count != 0)
@@ -108,6 +122,41 @@ public class Ghost : Character {
             }
         }
 
+        if (randomCounterBreak > 0) randomCounterBreak--;
+        if (randomCounterHowLong > 0) randomCounterHowLong--;
+    }
+
+    void FindPath(bool findPac)
+    {
+        tileArray = tilesCounter.GetTileArrays();
+        grid = new NesScripts.Controls.PathFind.Grid(tileMapWidth, tileMapHeight, tileArray);
+
+        cellPositionGhost = tileMap.WorldToCell(transform.position);
+
+        if (findPac == true)
+        {
+            cellPositionTarget = tileMap.WorldToCell(Pac.transform.position);
+        } else
+        {
+            if (randomCounterBreak == 1000 )
+            {
+                randomIndex = Random.Range(0, tilesCounter.availablePlaces.Count);
+            }
+            cellPositionTarget = tileMap.WorldToCell(tilesCounter.availablePlaces[randomIndex]);
+        }
+
+
+        path = Pathfinding.FindPath(grid, tilesCounter.LocalGridToPathGrid(cellPositionGhost), tilesCounter.LocalGridToPathGrid(cellPositionTarget));
+
+        __tempPathWorldPos.Clear();
+
+        foreach (var cell in path)
+        {
+            var localCell = tilesCounter.PathGridToLocalGrid(cell);
+            __tempPathWorldPos.Add(tileMap.GetCellCenterWorld(localCell));
+        }
+
+        pathWorldPos = __tempPathWorldPos;
     }
 
     void OnCollisionEnter2D(Collision2D col)

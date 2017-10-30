@@ -33,6 +33,7 @@ public class Pac : Character {
         invincible = false;
         invTimer = 1.5F;
         canAttack = false;
+        anim.SetInteger(directionVariable, (int)direction.RIGHT);
 
         sr = GetComponent<SpriteRenderer>();
 
@@ -166,7 +167,6 @@ public class Pac : Character {
             else if (swordDir == (int)direction.LEFT)
             {
                 newSword.transform.Rotate(0, 0, 90);
-                //newSword.GetComponent<SpriteRenderer>().flipX = true;
                 newSword.GetComponent<Rigidbody2D>().AddForce(Vector2.left * swordPower);
             }
         }
@@ -205,7 +205,7 @@ public class Pac : Character {
     {
         if (ui_handler.gameOver || ui_handler.gameWin)
         {
-            return;
+            canMove = false;
         }
 
         switch (GetDirection())
@@ -243,19 +243,19 @@ public class Pac : Character {
             return (int)direction.STOP;
         }
 
-        if (Input.GetKey(KeyCode.W))
+        if (Input.GetKey(KeyCode.UpArrow))
         {
             return (int)direction.UP;
         }
-        else if (Input.GetKey(KeyCode.D))
+        else if (Input.GetKey(KeyCode.RightArrow))
         {
             return (int)direction.RIGHT;
         }
-        else if (Input.GetKey(KeyCode.S))
+        else if (Input.GetKey(KeyCode.DownArrow))
         {
             return (int)direction.DOWN;
         }
-        else if (Input.GetKey(KeyCode.A))
+        else if (Input.GetKey(KeyCode.LeftArrow))
         {
             return (int)direction.LEFT;
         }

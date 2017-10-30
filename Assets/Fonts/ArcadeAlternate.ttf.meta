@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: e00c277e957d1ad488f2f8faa8c2c57b
+timeCreated: 1509385051
+licenseType: Free
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Arcade Alternate
+  fontNames:
+  - Arcade Alternate
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -208,6 +208,7 @@ public class Ghost : Character {
         {
             DecreaseHealth();
             Pac.GetComponent<Pac>().canAttack = false;
+            col.GetComponent<BoxCollider2D>().enabled = false;
         }
     }
 

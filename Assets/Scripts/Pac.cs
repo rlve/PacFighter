@@ -27,7 +27,7 @@ public class Pac : Character {
         base.Start();
         maxHealth = 3;
         currentHealth = maxHealth;
-        canMove = true;
+        canMove = false;
         speed = 2;
         swordPower = 250;
         invincible = false;
@@ -46,28 +46,19 @@ public class Pac : Character {
 
     public override void Update()
     {
-        Movement();
+        if (canMove)
+        {
+            Movement();
+            
+        }
         InvincibleHandler();
 
+        ResetDecay();
         if (Input.GetKeyDown(KeyCode.Space) && !spawned)
         {
             decay = 0.5f;
             spawned = true;
             Attack();
-        }
-
-        Reset();
-        if (Input.GetKey(KeyCode.Z) && !spawned)
-        {
-            decay = 0.5f;
-            spawned = true;
-            DecreaseHealth();
-        }
-        else if (Input.GetKey(KeyCode.X) && !spawned)
-        {
-            decay = 0.5f;
-            spawned = true;
-            IncreaseHealth();
         }
     }
 
@@ -203,10 +194,6 @@ public class Pac : Character {
 
     public override void Movement()
     {
-        if (ui_handler.gameOver || ui_handler.gameWin)
-        {
-            canMove = false;
-        }
 
         switch (GetDirection())
         {
@@ -263,7 +250,7 @@ public class Pac : Character {
     }
 
 
-    private void Reset()
+    private void ResetDecay()
     {
         if (spawned && decay > 0)
         {

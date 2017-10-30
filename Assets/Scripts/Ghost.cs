@@ -43,6 +43,8 @@ public class Ghost : Character {
 
     public UI_handler ui_handler;
 
+    public bool idle = true;
+
     public override void Start()
     {
         base.Start();
@@ -65,22 +67,16 @@ public class Ghost : Character {
 
     private void FixedUpdate()
     {
-        Movement();
-    }
-
-
-    public override void Update()
-    {
+        if (!idle)
+        {
+            Movement();
+        }
         
     }
 
+
     public override void Movement()
     {
-      if (ui_handler.gameOver || ui_handler.gameWin)
-        {
-            return;
-        }
-
         if (canFindPath == true)
         {
             if (randomCounterBreak == 0)

@@ -11,6 +11,8 @@ public class UI_handler : MonoBehaviour {
     public GameObject attackText;
     public GameObject gameOverText;
     public GameObject gameWinText;
+    public GameObject startPrompt;
+    public GameObject backPrompt;
 
     int heart_width = 20;
     int heartsDisplayed;

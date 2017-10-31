@@ -170,7 +170,7 @@ public class Pac : Character {
         if (currentHealth > 0)
         {
             currentHealth--;
-            ui_handler.DecreaseHealth();
+            ui_handler.DecreaseHearts();
         }
         else
         {
@@ -179,18 +179,6 @@ public class Pac : Character {
             
         }
     }
-
-    public override void IncreaseHealth()
-    {
-        ui_handler.IncreaseHealth();
-        if (currentHealth<maxHealth)
-        {
-            currentHealth++;
-        }
-        
-    }
-
-
 
     public override void Movement()
     {

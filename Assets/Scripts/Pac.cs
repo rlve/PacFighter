@@ -8,7 +8,7 @@ public class Pac : Character {
     public bool canMove;
 
     SpriteRenderer sr;
-    public UI_handler ui_handler;
+    public GameManager gameMenager;
     public GameObject sword;
 
     public bool invincible;
@@ -34,6 +34,7 @@ public class Pac : Character {
         invTimer = 1.5F;
         canAttack = false;
         anim.SetInteger(directionVariable, (int)direction.RIGHT);
+        gameMenager = GameObject.Find("Canvas").GetComponent<GameManager>();
 
         sr = GetComponent<SpriteRenderer>();
 
@@ -74,7 +75,7 @@ public class Pac : Character {
         {
             invTimer -= Time.deltaTime;
 
-            if (!ui_handler.gameOver)
+            if (!gameMenager.gameOver)
             {
                 Flicker();
             }
@@ -126,7 +127,7 @@ public class Pac : Character {
         else if (col.gameObject.name == "Sword") 
         {
             canAttack = true;
-            ui_handler.DisplayAttackPrompt();
+            gameMenager.DisplayAttackPrompt();
             Destroy(col.gameObject);
         }
     }
@@ -170,12 +171,12 @@ public class Pac : Character {
         if (currentHealth > 0)
         {
             currentHealth--;
-            ui_handler.DecreaseHearts();
+            gameMenager.DecreaseHearts();
         }
         else
         {
             canMove = false;
-            ui_handler.gameOver = true;
+            gameMenager.gameOver = true;
             
         }
     }

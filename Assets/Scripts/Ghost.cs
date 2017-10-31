@@ -8,7 +8,6 @@ using NesScripts.Controls.PathFind;
 
 public class Ghost : Character {
     TilesCounter tilesCounter;
-    Pathfinding pathFinder;
 
     NesScripts.Controls.PathFind.Grid grid;
     public List<Point> path;
@@ -41,7 +40,7 @@ public class Ghost : Character {
 
     GameObject Pac;
 
-    public UI_handler ui_handler;
+    public GameManager gameMenager;
 
     public bool idle = true;
 
@@ -51,7 +50,7 @@ public class Ghost : Character {
         maxHealth = 1;
         currentHealth = maxHealth;
         speed = 1.2F;
-        ui_handler = GameObject.Find("Canvas").GetComponent<UI_handler>();
+        gameMenager = GameObject.Find("Canvas").GetComponent<GameManager>();
 
         tilesCounter = FindObjectOfType<Tilemap>().GetComponent<TilesCounter>();
 

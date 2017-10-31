@@ -9,61 +9,128 @@ public class GameManager : MonoBehaviour {
     public Button bExit;
     public Text title;
 
-    GameObject Pac;
+    public GameObject Pac;
     GameObject[] enemies;
-    public UI_handler ui_handler;
 
+    public bool gameOver = false;
+    public bool gameWin = false;
 
     bool startState = true;
-    bool endState = false;
+
+    public GameObject heartPrefab;
+    public GameObject[] hearts;
+    public GameObject[] gems;
+    public GameObject scoreText;
+    public GameObject attackText;
+    public GameObject gameOverText;
+    public GameObject gameWinText;
+    public GameObject startPrompt;
+    public GameObject backPrompt;
+
+    int heart_width = 20;
+    int heartsToDisplay;
 
     void Start () {
         if (SceneManager.GetActiveScene().name == "main")
         {
-            ui_handler = GameObject.Find("Canvas").GetComponent<UI_handler>();
             enemies = GameObject.FindGameObjectsWithTag("Enemy");
             Pac = GameObject.FindGameObjectWithTag("Player");
+            heartsToDisplay = Pac.GetComponent<Pac>().maxHealth;
+
+            for (int i = 0; i < heartsToDisplay; i++)
+            {
+                hearts[i] = Instantiate(heartPrefab, heartPrefab.transform.position, heartPrefab.transform.rotation);
+                hearts[i].transform.SetParent(transform, false);
+                hearts[i].transform.localPosition += new Vector3((i * heart_width) + (i * 5), 0, 0);
+            }
+
+            UpdateScore();
         }
         
     }
 	
-
 	void Update () {
-       
-        if (SceneManager.GetActiveScene().name == "main" && Input.GetKeyDown(KeyCode.Space) & startState)
+        if (SceneManager.GetActiveScene().name == "main")
         {
-            
-            foreach (var enemy in enemies)
+            if (startState && Input.GetKeyDown(KeyCode.Space))
             {
-                enemy.GetComponent<Ghost>().idle = false;
+                foreach (var enemy in enemies)
+                {
+                    enemy.GetComponent<Ghost>().idle = false;
+                }
+                Pac.GetComponent<Pac>().canMove = true;
+
+                startPrompt.GetComponent<Text>().enabled = false;
+                scoreText.GetComponent<Text>().enabled = true;
+                startState = false;
             }
-            Pac.GetComponent<Pac>().canMove = true;
 
-            ui_handler.startPrompt.GetComponent<Text>().enabled = false;
-            ui_handler.scoreText.GetComponent<Text>().enabled = true;
-            startState = false;
-        }
-
-        if (SceneManager.GetActiveScene().name == "main" && (ui_handler.gameOver || ui_handler.gameWin))
-        {
-            enemies = GameObject.FindGameObjectsWithTag("Enemy");
-            foreach (var enemy in enemies)
+            if (gameOver || gameWin)
             {
-                enemy.GetComponent<Ghost>().idle = true;
+                if (gameOver)
+                {
+                    scoreText.GetComponent<Text>().enabled = false;
+                    gameOverText.GetComponent<Text>().enabled = true;
+                }
+
+                if (gameWin)
+                {
+                    scoreText.GetComponent<Text>().enabled = false;
+                    gameWinText.GetComponent<Text>().enabled = true;
+                }
+
+                enemies = GameObject.FindGameObjectsWithTag("Enemy");
+                foreach (var enemy in enemies)
+                {
+                    enemy.GetComponent<Ghost>().idle = true;
+                }
+                Pac.GetComponent<Pac>().canMove = false;
+
+                backPrompt.GetComponent<Text>().enabled = true;
+
+                if (Input.GetKeyDown(KeyCode.Escape))
+                {
+                    ChangeScene("menu");
+                }
+
             }
-            Pac.GetComponent<Pac>().canMove = false;
 
-            ui_handler.backPrompt.GetComponent<Text>().enabled = true;
+            UpdateScore();
+
+
         }
 
-        if (SceneManager.GetActiveScene().name == "main" && Input.GetKeyDown(KeyCode.Escape) & (ui_handler.gameOver || ui_handler.gameWin))
-        {
-            ChangeScene("menu");
-        }
+        
 
 
     }
 
+    public void UpdateScore()
+    {
+        gems = GameObject.FindGameObjectsWithTag("Gem");
+
+        scoreText.GetComponent<Text>().text = "GEMS LEFT: " + gems.Length.ToString();
+
+        if (gems.Length == 0)
+        {
+            gameWin = true;
+        }
+    }
+
+    public void DecreaseHearts()
+    {
+        heartsToDisplay--;
+        Destroy(hearts[heartsToDisplay]);
+    }
+
+    public void DisplayAttackPrompt()
+    {
+        if (GameObject.Find("Sword") != null)
+        {
+            attackText.GetComponent<Text>().enabled = true;
+        }
+
+    }
 
     public void PlayGame()
     {

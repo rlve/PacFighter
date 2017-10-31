@@ -2255,7 +2255,7 @@ Prefab:
         type: 2}
       propertyPath: ui_handler
       value: 
-      objectReference: {fileID: 2090044068}
+      objectReference: {fileID: 0}
     - target: {fileID: 61603051568383694, guid: 5c3614ca3c71e0948b9ab41e76db2949,
         type: 2}
       propertyPath: m_Size.x
@@ -2481,7 +2481,6 @@ GameObject:
   - component: {fileID: 1787423370}
   - component: {fileID: 1787423369}
   - component: {fileID: 1787423368}
-  - component: {fileID: 1787423373}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -2558,21 +2557,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1787423373
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1787423367}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: abddbd48aced87940b05f857126e75d2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bPlay: {fileID: 0}
-  bExit: {fileID: 0}
-  title: {fileID: 0}
-  ui_handler: {fileID: 0}
 --- !u!1 &2089165783
 GameObject:
   m_ObjectHideFlags: 0
@@ -4980,9 +4964,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 2090044063}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 47745a8fc514c8a49876da824f001e7e, type: 3}
+  m_Script: {fileID: 11500000, guid: abddbd48aced87940b05f857126e75d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bPlay: {fileID: 0}
+  bExit: {fileID: 0}
+  title: {fileID: 0}
+  Pac: {fileID: 0}
+  gameOver: 0
+  gameWin: 0
   heartPrefab: {fileID: 1938252544504652, guid: a02399da570045342896d6692b80a01c,
     type: 2}
   hearts:
@@ -4998,8 +4988,6 @@ MonoBehaviour:
   gameWinText: {fileID: 523587118}
   startPrompt: {fileID: 1622384481}
   backPrompt: {fileID: 535080357}
-  gameOver: 0
-  gameWin: 0
 --- !u!1 &2093192026
 GameObject:
   m_ObjectHideFlags: 0

@@ -219,7 +219,18 @@ MonoBehaviour:
   bPlay: {fileID: 0}
   bExit: {fileID: 0}
   title: {fileID: 0}
-  ui_handler: {fileID: 0}
+  Pac: {fileID: 0}
+  gameOver: 0
+  gameWin: 0
+  heartPrefab: {fileID: 0}
+  hearts: []
+  gems: []
+  scoreText: {fileID: 0}
+  attackText: {fileID: 0}
+  gameOverText: {fileID: 0}
+  gameWinText: {fileID: 0}
+  startPrompt: {fileID: 0}
+  backPrompt: {fileID: 0}
 --- !u!1 &231859117
 GameObject:
   m_ObjectHideFlags: 0
@@ -313,7 +324,7 @@ GameObject:
   - component: {fileID: 649090699}
   - component: {fileID: 649090698}
   m_Layer: 5
-  m_Name: Canvas menu
+  m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -333,7 +344,18 @@ MonoBehaviour:
   bPlay: {fileID: 1155008053}
   bExit: {fileID: 718527566}
   title: {fileID: 228349836}
-  ui_handler: {fileID: 0}
+  Pac: {fileID: 0}
+  gameOver: 0
+  gameWin: 0
+  heartPrefab: {fileID: 0}
+  hearts: []
+  gems: []
+  scoreText: {fileID: 0}
+  attackText: {fileID: 0}
+  gameOverText: {fileID: 0}
+  gameWinText: {fileID: 0}
+  startPrompt: {fileID: 0}
+  backPrompt: {fileID: 0}
 --- !u!114 &649090699
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -630,7 +652,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 649090698}
-        m_MethodName: PlayGame
+        m_MethodName: PlayAnimation
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

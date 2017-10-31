@@ -3,21 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Pac : Character {
-    
-    public int swordPower;
-    public bool canMove;
-
-    SpriteRenderer sr;
     public GameManager gameMenager;
     public GameObject sword;
-
-    public bool invincible;
-    float invTimer;
+    SpriteRenderer sr;
 
     GameObject[] enemies;
     List<BoxCollider2D> collidersToIgnore = new List<BoxCollider2D>();
 
+    public bool canMove;
     public bool canAttack;
+    public int swordPower;
+    public bool invincible;
+    float invTimer;
 
     bool spawned = false;
     float decay;
@@ -50,10 +47,10 @@ public class Pac : Character {
         if (canMove)
         {
             Movement();
-            
         }
         InvincibleHandler();
 
+        // Delay between attacks
         ResetDecay();
         if (Input.GetKeyDown(KeyCode.Space) && !spawned)
         {
@@ -63,40 +60,9 @@ public class Pac : Character {
         }
     }
 
-    void Flicker()
-    {
-        if (sr.enabled == true) sr.enabled = false;
-        else if (sr.enabled == false) sr.enabled = true;
-    }
-
-    void InvincibleHandler()
-    {
-        if (invincible == true)
-        {
-            invTimer -= Time.deltaTime;
-
-            if (!gameMenager.gameOver)
-            {
-                Flicker();
-            }
-            
-
-            if (invTimer<=0)
-            {
-                invincible = false;
-                invTimer = 1F;
-                sr.enabled = true;
-
-                foreach (var enemyCollider in collidersToIgnore)
-                {
-                    Physics2D.IgnoreCollision(GetComponent<CircleCollider2D>(), enemyCollider, false);
-                }
-            }
-        }
-    }
-
     void OnCollisionEnter2D(Collision2D col)
     {
+        //invincible time after collision with ghost
         if (col.gameObject.tag == "Enemy")
         {
             if (!invincible)
@@ -115,6 +81,7 @@ public class Pac : Character {
 
     void OnTriggerEnter2D(Collider2D col)
     {
+        // increase ghosts speed on collected gem 
         if (col.gameObject.tag == "Gem")
         {
             enemies = GameObject.FindGameObjectsWithTag("Enemy");
@@ -124,6 +91,7 @@ public class Pac : Character {
             }
             Destroy(col.gameObject);
         }
+        // collect sword to kill ghosts! 
         else if (col.gameObject.name == "Sword") 
         {
             canAttack = true;
@@ -165,6 +133,37 @@ public class Pac : Character {
 
     }
 
+    void InvincibleHandler()
+    {
+        if (invincible == true)
+        {
+            invTimer -= Time.deltaTime;
+
+            if (!gameMenager.gameOver)
+            {
+                Flicker();
+            }
+
+            if (invTimer <= 0)
+            {
+                invincible = false;
+                invTimer = 1F;
+                sr.enabled = true;
+
+                foreach (var enemyCollider in collidersToIgnore)
+                {
+                    Physics2D.IgnoreCollision(GetComponent<CircleCollider2D>(), enemyCollider, false);
+                }
+            }
+        }
+    }
+
+    void Flicker()
+    {
+        if (sr.enabled == true) sr.enabled = false;
+        else if (sr.enabled == false) sr.enabled = true;
+    }
+
     public override void DecreaseHealth()
     {
         
@@ -176,14 +175,12 @@ public class Pac : Character {
         else
         {
             canMove = false;
-            gameMenager.gameOver = true;
-            
+            gameMenager.gameOver = true;   
         }
     }
 
     public override void Movement()
     {
-
         switch (GetDirection())
         {
             case (int)direction.UP:
@@ -214,11 +211,6 @@ public class Pac : Character {
 
     public override int GetDirection()
     {
-        if (canMove == false)
-        {
-            return (int)direction.STOP;
-        }
-
         if (Input.GetKey(KeyCode.UpArrow))
         {
             return (int)direction.UP;
@@ -238,7 +230,7 @@ public class Pac : Character {
         else return (int)direction.STOP;
     }
 
-
+    //handling delay between getting keyboard input
     private void ResetDecay()
     {
         if (spawned && decay > 0)

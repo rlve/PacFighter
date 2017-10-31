@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviour {
     int heart_width = 20;
     int heartsToDisplay;
 
-    void Start () {
+        void Start () {
         if (SceneManager.GetActiveScene().name == "main")
         {
             enemies = GameObject.FindGameObjectsWithTag("Enemy");
@@ -43,10 +43,8 @@ public class GameManager : MonoBehaviour {
                 hearts[i].transform.SetParent(transform, false);
                 hearts[i].transform.localPosition += new Vector3((i * heart_width) + (i * 5), 0, 0);
             }
-
             UpdateScore();
-        }
-        
+        } 
     }
 	
 	void Update () {
@@ -56,7 +54,7 @@ public class GameManager : MonoBehaviour {
             {
                 foreach (var enemy in enemies)
                 {
-                    enemy.GetComponent<Ghost>().idle = false;
+                    enemy.GetComponent<Ghost>().canMove = true;
                 }
                 Pac.GetComponent<Pac>().canMove = true;
 
@@ -82,7 +80,7 @@ public class GameManager : MonoBehaviour {
                 enemies = GameObject.FindGameObjectsWithTag("Enemy");
                 foreach (var enemy in enemies)
                 {
-                    enemy.GetComponent<Ghost>().idle = true;
+                    enemy.GetComponent<Ghost>().canMove = false;
                 }
                 Pac.GetComponent<Pac>().canMove = false;
 
@@ -92,23 +90,14 @@ public class GameManager : MonoBehaviour {
                 {
                     ChangeScene("menu");
                 }
-
             }
-
             UpdateScore();
-
-
         }
-
-        
-
-
     }
 
     public void UpdateScore()
     {
         gems = GameObject.FindGameObjectsWithTag("Gem");
-
         scoreText.GetComponent<Text>().text = "GEMS LEFT: " + gems.Length.ToString();
 
         if (gems.Length == 0)
@@ -129,24 +118,13 @@ public class GameManager : MonoBehaviour {
         {
             attackText.GetComponent<Text>().enabled = true;
         }
-
     }
 
-    public void PlayGame()
+    public void PlayAnimation()
     {
         bPlay.animator.SetBool("playGame", true);
         bExit.animator.SetBool("playGame", true);
         title.GetComponent<Animator>().SetBool("playGame", true);
-    }
-
-    void PlayState()
-    {
-        ChangeScene("main");
-    }
-
-    public void ChangeScene(string sceneName)
-    {
-        SceneManager.LoadScene(sceneName);
     }
 
     public void ExitAnimation()
@@ -156,10 +134,13 @@ public class GameManager : MonoBehaviour {
         title.GetComponent<Animator>().SetBool("exitGame", true);
     }
 
+    public void ChangeScene(string sceneName)
+    {
+        SceneManager.LoadScene(sceneName);
+    }
+
     public void ExitGame()
     {
         Application.Quit();
     }
-
-
 }

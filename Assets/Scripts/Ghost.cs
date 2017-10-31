@@ -4,9 +4,10 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using NesScripts.Controls.PathFind;
 
-
-
 public class Ghost : Character {
+    public GameManager gameMenager;
+    public GameObject destroyEffect;
+    GameObject Pac;
     TilesCounter tilesCounter;
 
     NesScripts.Controls.PathFind.Grid grid;
@@ -33,16 +34,8 @@ public class Ghost : Character {
 
     public bool canFindPath = true;
     public float differenceMagnitude;
-
     public int firstStep = 0;
-
-    public GameObject destroyEffect;
-
-    GameObject Pac;
-
-    public GameManager gameMenager;
-
-    public bool idle = true;
+    public bool canMove = false;
 
     public override void Start()
     {
@@ -50,10 +43,10 @@ public class Ghost : Character {
         maxHealth = 1;
         currentHealth = maxHealth;
         speed = 1.2F;
+
         gameMenager = GameObject.Find("Canvas").GetComponent<GameManager>();
 
         tilesCounter = FindObjectOfType<Tilemap>().GetComponent<TilesCounter>();
-
         tileMap = tilesCounter.GetComponentInParent<Tilemap>();
         tileMapWidth = -tileMap.cellBounds.xMin + tileMap.cellBounds.xMax;
         tileMapHeight = -tileMap.cellBounds.yMin + tileMap.cellBounds.yMax;
@@ -66,16 +59,16 @@ public class Ghost : Character {
 
     private void FixedUpdate()
     {
-        if (!idle)
+        if (canMove)
         {
             Movement();
         }
         
     }
 
-
     public override void Movement()
     {
+        // after random time find path to random places on the map and stop following player
         if (canFindPath == true)
         {
             if (randomCounterBreak == 0)
@@ -97,6 +90,7 @@ public class Ghost : Character {
             FindPath(currentTarget);
             canFindPath = false;
         }
+        //find paths allows only after meeting target cell
         else
         {
             if (cellPositionGhost == cellPositionTarget)
@@ -110,13 +104,12 @@ public class Ghost : Character {
             var difference = pathWorldPos[firstStep] - transform.position;
             differenceMagnitude = difference.magnitude;
 
+            //check difference between ghost position and first cell in the path, then move or find new path
             if (differenceMagnitude > 0.05F)
             {
                 Vector3 direction = (pathWorldPos[firstStep] - transform.position).normalized;
-
-                SetAnimation(direction);
-
                 GetComponent<Rigidbody2D>().MovePosition(transform.position + direction * speed * Time.deltaTime);
+                SetAnimation(direction);
             }
             else
             {
@@ -128,6 +121,7 @@ public class Ghost : Character {
         if (randomCounterHowLong > 0) randomCounterHowLong--;
     }
 
+    //find the nearest path to targeted cell in the map, downloaded scripts used for that, check 2dTleBasedPathFinding folder
     void FindPath(bool findPac)
     {
         tileArray = tilesCounter.GetTileArrays();
@@ -147,9 +141,7 @@ public class Ghost : Character {
             cellPositionTarget = tileMap.WorldToCell(tilesCounter.availablePlaces[randomIndex]);
         }
 
-
         path = Pathfinding.FindPath(grid, tilesCounter.LocalGridToPathGrid(cellPositionGhost), tilesCounter.LocalGridToPathGrid(cellPositionTarget));
-
         __tempPathWorldPos.Clear();
 
         foreach (var cell in path)
@@ -157,7 +149,6 @@ public class Ghost : Character {
             var localCell = tilesCounter.PathGridToLocalGrid(cell);
             __tempPathWorldPos.Add(tileMap.GetCellCenterWorld(localCell));
         }
-
         pathWorldPos = __tempPathWorldPos;
     }
 
@@ -166,7 +157,8 @@ public class Ghost : Character {
         if (dir.x >0.95 && dir.x < 1.05)
         {
             anim.SetInteger(directionVariable, (int)direction.RIGHT);
-        } else if (dir.x < -0.95 && dir.x > -1.05)
+        }
+        else if (dir.x < -0.95 && dir.x > -1.05)
         {
             anim.SetInteger(directionVariable, (int)direction.LEFT);
         }
@@ -185,12 +177,15 @@ public class Ghost : Character {
         speed += 0.1F;
     }
 
+
     void OnCollisionEnter2D(Collision2D col)
     {
+        // set random target to follow after collision with Pac
         if (col.gameObject.tag == "Player")
         {
             randomCounterBreak = 0;
         }
+        // collisions between ghosts disabled
         else if (col.gameObject.tag == "Enemy")
         {
             Physics2D.IgnoreCollision(GetComponent<BoxCollider2D>(), col.collider);
@@ -199,6 +194,7 @@ public class Ghost : Character {
 
     void OnTriggerEnter2D(Collider2D col)
     {
+        // kill ghost after meeting the sword
         if (col.gameObject.tag == "Weapon")
         {
             DecreaseHealth();
@@ -245,6 +241,4 @@ public class Ghost : Character {
 
         Instantiate(destroyEffect, transform.position, transform.rotation);
     }
-
-
 }

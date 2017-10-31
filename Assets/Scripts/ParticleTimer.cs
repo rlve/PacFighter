@@ -5,14 +5,6 @@ using UnityEngine;
 public class ParticleTimer : MonoBehaviour {
     public float timer;
 
-    // Use this for initialization
-    void Start()
-    {
-
-    }
-
-	
-	// Update is called once per frame
 	void Update () {
         timer -= Time.deltaTime;
 

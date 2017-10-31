@@ -4,21 +4,13 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour {
     float timer = .15F;
-
-
-	// Use this for initialization
-	void Start () {
-		
-	}
 	
-	// Update is called once per frame
 	void Update () {
         timer -= Time.deltaTime;
 
         if (timer <= 0)
         {
             GameObject.FindGameObjectWithTag("Player").GetComponent<Pac>().canMove = true;
-          
             Destroy(gameObject);
         }
 		
